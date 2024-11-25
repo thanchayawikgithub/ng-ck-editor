@@ -5,7 +5,7 @@ import * as EditorActions from './editor.actions';
 export const initialState: EditorState = {
   name: '',
   code: '',
-  template: '<h1>Hello</h1>',
+  template: '',
 };
 
 export const editorReducer = createReducer(

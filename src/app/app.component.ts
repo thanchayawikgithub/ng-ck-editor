@@ -55,8 +55,12 @@ import {
 
 import translations from 'ckeditor5/translations/th.js';
 import { Store } from '@ngrx/store';
-import { selectEditorTemplate } from './store/editor/editor.selectors';
-import { Subscription } from 'rxjs';
+import {
+  selectEditorCode,
+  selectEditorName,
+  selectEditorTemplate,
+} from './store/editor/editor.selectors';
+import { async, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -72,14 +76,13 @@ export class AppComponent implements OnDestroy {
   public Editor = ClassicEditor;
   public config: EditorConfig = {};
   public template$;
-
   constructor(private changeDetector: ChangeDetectorRef, private store: Store) {
     this.template$ = this.store.select(selectEditorTemplate);
   }
 
-  onEditorChange(event: { editor: { getData: () => string } }): void {
+  onEditorChange(event: any): void {
     const content = event.editor.getData();
-    this.store.dispatch(EditorActions.setEditorCode({ code: content }));
+    this.store.dispatch(EditorActions.setEditorTemplate({ template: content }));
   }
 
   setEditorName(event: Event): void {
@@ -260,7 +263,7 @@ export class AppComponent implements OnDestroy {
     this.subscription = this.template$.subscribe((template) => {
       this.config = {
         ...this.config,
-        initialData: template || '',
+        initialData: template,
       };
       this.isLayoutReady = true;
       this.changeDetector.detectChanges();
