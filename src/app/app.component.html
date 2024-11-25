@@ -17,4 +17,6 @@
     [(ngModel)]="template"
     (ngModelChange)="setEditorTemplate($event)"
   />
+  <div>Name: {{ name$ | async }}</div>
+  <div>Code: {{ code$ | async }}</div>
 </div>

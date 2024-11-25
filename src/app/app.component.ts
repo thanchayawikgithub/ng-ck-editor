@@ -11,7 +11,7 @@ import {
 } from './store/editor/editor.selectors';
 import { ClassicEditor } from 'ckeditor5';
 import { editorConfig } from './editor-config';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -25,9 +25,9 @@ export class AppComponent {
   public isLayoutReady = false;
   public Editor = ClassicEditor;
   public config = editorConfig;
-  public template$;
-  public name$;
-  public code$;
+  public template$: Observable<string>;
+  public name$: Observable<string>;
+  public code$: Observable<string>;
   public template: string = '';
 
   constructor(private store: Store) {
