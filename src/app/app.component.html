@@ -1,31 +1,20 @@
 <div class="p-5">
-  <div class="main-container">
-    <div class="flex gap-2 mb-2">
-      <input
-        (input)="setEditorName($event)"
-        placeholder="Name"
-        class="border-2 border-gray-300"
-      />
-      <input
-        (input)="setEditorCode($event)"
-        placeholder="Code"
-        class="border-2 border-gray-300"
-      />
-    </div>
-    <div
-      class="editor-container editor-container_classic-editor"
-      #editorContainerElement
-    >
-      <div class="editor-container__editor">
-        <div #editorElement>
-          <ckeditor
-            [editor]="Editor"
-            [config]="config"
-            [data]="(template$ | async) || ''"
-            (change)="onEditorChange($event)"
-          ></ckeditor>
-        </div>
-      </div>
-    </div>
+  <div class="flex gap-2 mb-2">
+    <input
+      (input)="setEditorName($event)"
+      placeholder="Name"
+      class="border-2 border-gray-300 max-w-xs h-10"
+    />
+    <input
+      (input)="setEditorCode($event)"
+      placeholder="Code"
+      class="border-2 border-gray-300 max-w-xs h-10"
+    />
   </div>
+  <ckeditor
+    [editor]="Editor"
+    [config]="config"
+    [(ngModel)]="template"
+    (ngModelChange)="setEditorTemplate($event)"
+  />
 </div>

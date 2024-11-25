@@ -13,5 +13,3 @@ export const setEditorTemplate = createAction(
   '[Editor] Set Template',
   props<{ template: string }>()
 );
-
-export const resetEditor = createAction('[Editor] Reset');

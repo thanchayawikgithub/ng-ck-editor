@@ -21,6 +21,5 @@ export const editorReducer = createReducer(
   on(EditorActions.setEditorTemplate, (state, { template }) => ({
     ...state,
     template,
-  })),
-  on(EditorActions.resetEditor, () => initialState)
+  }))
 );
