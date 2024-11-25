@@ -1,7 +1,7 @@
 <div>
   <div class="main-container">
-    <input />
-    <input />
+    <input (input)="setEditorName($event)" />
+    <input (input)="setEditorCode($event)" />
     <div
       class="editor-container editor-container_classic-editor"
       #editorContainerElement

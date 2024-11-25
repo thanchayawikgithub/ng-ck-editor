@@ -1,8 +1,13 @@
-import { ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  ViewEncapsulation,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { FormsModule } from '@angular/forms';
-
+import * as EditorActions from './store/editor/editor.actions';
 import {
   ClassicEditor,
   AccessibilityHelp,
@@ -49,6 +54,9 @@ import {
 } from 'ckeditor5';
 
 import translations from 'ckeditor5/translations/th.js';
+import { Store } from '@ngrx/store';
+import { selectEditorTemplate } from './store/editor/editor.selectors';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -58,11 +66,35 @@ import translations from 'ckeditor5/translations/th.js';
   styleUrls: ['./app.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
+  private subscription!: Subscription;
   public isLayoutReady = false;
   public Editor = ClassicEditor;
   public config: EditorConfig = {};
-  constructor(private changeDetector: ChangeDetectorRef) {}
+  public template$;
+
+  constructor(private changeDetector: ChangeDetectorRef, private store: Store) {
+    this.template$ = this.store.select(selectEditorTemplate);
+  }
+
+  onEditorChange(event: { editor: { getData: () => string } }): void {
+    const content = event.editor.getData();
+    this.store.dispatch(EditorActions.setEditorCode({ code: content }));
+  }
+
+  setEditorName(event: Event): void {
+    const name = (event.target as HTMLInputElement).value;
+    this.store.dispatch(EditorActions.setEditorName({ name }));
+  }
+
+  setEditorCode(event: Event): void {
+    const code = (event.target as HTMLInputElement).value;
+    this.store.dispatch(EditorActions.setEditorCode({ code }));
+  }
+
+  resetEditor(): void {
+    this.store.dispatch(EditorActions.resetEditor());
+  }
 
   public ngAfterViewInit(): void {
     this.config = {
@@ -225,7 +257,19 @@ export class AppComponent {
       translations: [translations],
     };
 
-    this.isLayoutReady = true;
-    this.changeDetector.detectChanges();
+    this.subscription = this.template$.subscribe((template) => {
+      this.config = {
+        ...this.config,
+        initialData: template || '',
+      };
+      this.isLayoutReady = true;
+      this.changeDetector.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }
